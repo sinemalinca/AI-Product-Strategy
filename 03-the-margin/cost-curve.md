@@ -12,25 +12,25 @@
 
 | Cost Category | Per-User/Month | Notes |
 |--------------|----------------|-------|
-| Inference (primary model) | $0.04 | This is the cost of the more expensive model path for harder recommendation cases. I assumed only a small share of requests goes here. |
-| Inference (cascading/triage) | $0.07 | This is the larger share of requests. Most One Click flows should run on a cheaper path first. |
-| Infrastructure | $0.05 | Basic backend orchestration, logging, and service costs. |
-| Data/storage | $0.03 | Storing recommendation events, campaign inputs, and performance signals. |
-| Human-in-the-loop | $0.02 | Light internal review for recommendation quality and tuning. |
-| **Total AI COGS** | **$0.21** | Estimated monthly cost per active seller using One Click. |
+| Inference (primary model) | $10.00 | I assumed only 5% of monthly One Click requests go to the most expensive path for harder or low-confidence cases. |
+| Inference (cascading/triage) | $22.88 | This covers the larger share of requests on cheaper paths. Most flows should stay here. |
+| Infrastructure | $0.20 | Basic orchestration, logging, and service costs. |
+| Data/storage | $0.15 | Storing recommendation events, campaign inputs, and performance signals. |
+| Human-in-the-loop | $0.05 | Light internal review and quality checks. |
+| **Total AI COGS** | **$33.28 / month** | Estimated monthly AI-related cost for 5,000 One Click requests. |
 
 ## Cascading Strategy
 
 **Triage model:** Claude Haiku 4.5  
 **Frontier model:** Claude Opus 4.7  
-**Routing rule:** Most requests should go through a cheaper path first. Standard recommendation and short explanation flows can run on Haiku. Only edge cases, low-confidence recommendations, or more complex reasoning should go to Opus.  
-**Expected cascade ratio:** 80/20
+**Routing rule:** Most requests should go through the cheaper path first. Standard recommendation flows and short explanations should stay on Haiku. Only edge cases, low-confidence recommendations, or more complex reasoning should go to Opus.  
+**Expected cascade ratio:** 95/5
 
 ## Pricing Model
 
 **Current pricing:** Sponsored Product Ads is already part of the marketplace ads flow. Sellers pay through ad spend, not through a separate AI fee.  
 
-**Proposed AI pricing:** In the first phase, One Click should stay bundled inside the core ads workflow because it helps increase campaign creation and ad spend. Later, more advanced automation features could be offered as a premium layer for larger sellers.  
+**Proposed AI pricing:** One Click can stay bundled as a lightweight recommendation feature, as long as the expensive model path stays limited. If usage grows much more or advanced automation is added, a premium automation tier may be needed later.  
 
 **Model:** hybrid
 
@@ -38,14 +38,14 @@
 
 | Scenario | Impact on Margin | Response |
 |----------|-----------------|----------|
-| Inference costs 3x | Margin drops, but the feature can still survive if most traffic stays on the cheap path. | Reduce use of expensive models, simplify explanation generation, and move more flows to rules or Haiku. |
-| Heaviest segment doubles | Power sellers can create much more AI traffic than expected and push blended cost up faster. | Add usage guardrails, improve caching, and give heavy users a more optimized path. |
-| Model provider raises prices 50% | Total AI COGS increases, especially if too many requests depend on the expensive model path. | Shift more traffic to fallback logic or cheaper models, and test a backup provider. |
+| Inference costs 3x | Margin becomes much tighter, especially if too many requests move to the expensive path. | Reduce frontier usage, simplify explanation generation, and shift more traffic to cheaper models or internal rules. |
+| Heaviest segment doubles | A sudden increase in recommendation volume can push AI cost up quickly. | Add guardrails, improve caching, and keep the default flow on the cheap path. |
+| Model provider raises prices 50% | AI COGS rises meaningfully, but the feature can still survive if the core recommendation flow is not fully dependent on the expensive model. | Test a backup provider, reduce non-essential calls, and route more requests through fallback logic. |
 
 ## Board One-Pager
 
-**Before (traditional SaaS):** Sellers create campaigns manually. Setup takes more effort, and some sellers drop before launching ads. Revenue comes from ad spend, but campaign adoption is limited by friction.  
+**Before (traditional SaaS):** Sellers create campaigns manually. Setup takes more effort, and some sellers may drop before launching ads. Revenue comes from ad spend, but campaign creation is limited by friction.  
 
-**After (AI-enabled):** One Click helps sellers launch campaigns faster by recommending the product, CPC, budget, and duration in one flow. This can increase campaign creation and total ad spend, while keeping cost under control through cascading.  
+**After (AI-enabled):** One Click helps sellers launch campaigns faster by recommending the product, CPC, budget, and duration in one flow. With a 5,000-request monthly volume, the feature still looks manageable if most requests stay on the cheap path and only a small share is escalated.  
 
-**Net margin shift:** Margin may go down slightly on a per-action basis because AI adds variable cost, but if One Click increases campaign adoption enough, the overall business impact can still be positive.
+**Net margin shift:** AI adds variable cost, so margin is lower than a fully manual setup flow. But if One Click increases campaign creation and ad spend enough, the overall business impact can still be positive.
