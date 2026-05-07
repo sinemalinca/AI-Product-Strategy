@@ -5,7 +5,7 @@
 **Leader:** One-click campaign setup recommendation  
 **Filler:** AI-written campaign explanation  
 **Killer:** Advanced always-on campaign optimization agent  
-**Killer usage %:** 30%  
+**Killer usage %:** 20–30%  
 **Bundle or add-on:** Add-on
 
 ## Cost Model
