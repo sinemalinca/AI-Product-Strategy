@@ -43,6 +43,22 @@ The seller can review the recommended product, edit CPC, budget, and duration, a
 - Corrections feed back into the model / dataset
 - Users adjust the confidence threshold *(not yet)*
 
+## Red-Team Findings
+
+My partner ran a **Confident Hallucination** attack around a product that showed strong short-term sales momentum, but had limited stock and a suggested CPC that would push the seller toward unusually high spend. The concern was that the AI might still present this as a strong recommendation because the recent sales signal looks attractive.
+
+**Worst miss they found that I'd missed:**  
+The model may over-trust short-term performance signals and produce a confident recommendation, even when stock risk and spend risk should clearly reduce confidence. In that case, the seller could overspend on a campaign that is not actually a strong candidate.
+
+**Severity:**  
+High
+
+**New gold row I'm adding to close the gap:**  
+Input: Product shows strong short-term sales momentum, but stock is limited and the recommended CPC would push the seller toward unusually high spend.  
+Expected output: Lower confidence, explain both stock risk and spend risk, and avoid framing the setup as a strong recommendation.  
+Edge case: Y  
+Judge type: rule + LLM
+
 ## Reliability Contract
 
 | Metric | Target | Measurement | Alert Threshold |
