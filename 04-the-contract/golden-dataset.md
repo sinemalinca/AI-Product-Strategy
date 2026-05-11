@@ -43,6 +43,23 @@ The seller can review the recommended product, edit CPC, budget, and duration, a
 - Corrections feed back into the model / dataset
 - Users adjust the confidence threshold *(not yet)*
 
+## Reliability Contract
+
+| Metric | Target | Measurement | Alert Threshold |
+|--------|--------|-------------|-----------------|
+| Accuracy | 85% | Weekly eval run against 10 golden rows in v1, expanding over time with rule checks and LLM review for mixed-signal cases. | Below 80% → trigger gold-set audit |
+| Hallucination rate | <2% | Weekly eval run plus sampled manual review of explanations and flagged recommendation cases for unsupported claims, overstated confidence, or fabricated rationale. | Above 5% → pause rollout and review recommendation logic |
+| Latency (p95) | <3 seconds | Product analytics and service monitoring on One Click recommendation generation time. | Above 5 seconds for 5 minutes → page on-call |
+| Drift velocity | No major drop across 2 consecutive eval cycles | Compare eval results over time across the golden dataset, especially mixed-signal and adversarial cases. | 5-point drop across 2 eval cycles → trigger gold-set audit |
+
+## HITL Architecture
+
+**Trigger:** Confidence <50% OR recommendation includes strong spend risk, stock risk, or conflicting product signals.
+
+**Reviewer:** Primary reviewer is the seller through manual review and editable fields. Repeated high-risk or low-confidence patterns are reviewed internally by the product or ads team.
+
+**Feedback loop:** Seller edits, overrides, and repeated low-confidence cases should feed back into the golden dataset review and future recommendation evaluation.
+
 ## Red-Team Findings
 
 My partner ran a **Confident Hallucination** attack around a product that showed strong short-term sales momentum, but had limited stock and a suggested CPC that would push the seller toward unusually high spend. The concern was that the AI might still present this as a strong recommendation because the recent sales signal looks attractive.
@@ -58,20 +75,3 @@ Input: Product shows strong short-term sales momentum, but stock is limited and 
 Expected output: Lower confidence, explain both stock risk and spend risk, and avoid framing the setup as a strong recommendation.  
 Edge case: Y  
 Judge type: rule + LLM
-
-## Reliability Contract
-
-| Metric | Target | Measurement | Alert Threshold |
-|--------|--------|-------------|-----------------|
-| Accuracy | 85%+ recommendation quality on golden dataset | Weekly eval run against labeled test cases | Below 80% |
-| Hallucination rate | <2% | Manual review of sampled outputs and flagged cases | Above 5% |
-| Latency (p95) | <3 seconds | Product analytics and service monitoring | Above 5 seconds |
-| Drift velocity | No major drop across 2 consecutive eval cycles | Compare eval scores over time by scenario type | 5-point drop in 2 cycles |
-
-## HITL Architecture
-
-The default flow stays self-service. Human review is not needed for every recommendation. The first review layer is the seller, who can inspect and edit the setup before launch. Additional escalation is needed when confidence is low, when signals are strongly conflicting, or when the recommendation could push the seller toward unusually high spend with weak support. Repeated low-confidence or high-risk patterns should be reviewed internally and added back into the dataset.
-
-## Red-Team Findings
-
-One important failure mode is that the model may recommend an expensive setup too confidently when short-term sales momentum looks strong, even if stock is limited or long-term conversion quality is weak. This is risky because the seller may trust the recommendation and overspend on a campaign that is not actually a strong candidate.
