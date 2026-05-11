@@ -4,30 +4,42 @@
 
 | # | Input | Expected Output | Edge Case? | Judge Type |
 |---|-------|----------------|-----------|-----------|
-| 1 | Product with strong sales trend, high conversion rate, healthy stock, and stable price | The system should recommend this product for campaign setup, with a reasonable CPC and budget range | N | rule |
-| 2 | Product with low stock but strong recent sales and conversion | The system should either avoid recommending this product or clearly reduce confidence and explain the stock risk | Y | rule |
-| 3 | Product with high traffic but weak conversion rate | The system should avoid aggressive recommendation and should not suggest a high CPC without strong supporting signals | N | rule |
-| 4 | Two similar products where one has better conversion but the other has a stronger sales trend | The system should recommend the better overall candidate and explain the trade-off clearly | Y | LLM |
-| 5 | Product with discount applied, strong rating, and improving category performance, but mixed historical campaign results | The system may recommend the product, but the explanation should mention both the positive signals and the uncertainty | Y | LLM |
+| 1 | Product has strong 14-day sales trend, high conversion rate, healthy stock, stable price, and positive recent campaign performance | Recommend this product with a reasonable CPC, budget, and duration. Explanation should highlight strong trend, conversion, and stock health. | N | rule |
+| 2 | Product has strong sales trend and high conversion rate, but stock is low | Do not recommend aggressively. Lower confidence and explain stock risk before campaign approval. | Y | rule |
+| 3 | Product has high traffic but weak conversion rate | Avoid a strong recommendation and do not suggest a high CPC without stronger supporting signals. | N | rule |
+| 4 | Two similar products exist: one has better conversion rate, the other has stronger recent sales momentum | Recommend the stronger overall candidate and explain the trade-off clearly. | Y | LLM |
+| 5 | Product has discount applied, strong rating, and improving category performance, but mixed historical campaign results | Recommendation may be positive, but the explanation must mention both upside and uncertainty. | Y | LLM |
+| 6 | Product has high conversion rate and healthy stock, but price is significantly above category average | Do not overstate performance. Recommendation should reflect pricing risk and avoid overly aggressive CPC. | N | rule |
+| 7 | Product has weak recent sales, but historically strong campaign ROAS | Do not reject the product too quickly. Weigh historical ad performance and explain why the case is still viable or not. | Y | LLM |
+| 8 | Product shows rising sales trend caused by a short-term seasonal spike | Do not treat the spike as stable demand unless broader signals support it. Lower confidence if needed. | Y | rule |
+| 9 | Product belongs to a volatile category and has limited recent performance data | Reduce confidence and avoid framing the setup as a strong recommendation. | Y | rule |
+| 10 | Product has strong signals overall, but the suggested CPC would push the seller toward unusually high spend | Moderate the bid or clearly explain the spend risk before approval. | Y | LLM |
 
-**Adversarial rows included:** 3  
-**Coverage gaps identified by partner:** Cases where the AI may over-recommend high-spend setups, cases where recent short-term signals conflict with longer-term product weakness, and cases where stock risk is not serious enough to block recommendation but still important enough to lower confidence.
+**Adversarial rows included:** 5
+
+**Judge mix (rule / LLM):** 60% / 40%
+
+**Coverage gap (from partner):**  
+The first version covers strong recommendation cases, mixed-signal cases, stock risk, pricing risk, unstable demand, and spend risk. The main remaining gaps are seller-specific behavior, budget sensitivity, and category seasonality patterns that vary across time.
+
+**Sales test: one sentence — "Here's how we test our AI."**  
+We test our AI against a versioned set of campaign recommendation scenarios, including hard edge cases, and block release if recommendation quality falls below the expected bar.
 
 ## Confidence UX Design
 
 **Approach:** tiered confidence
 
-**High confidence (>90%):**
-Show the recommendation as “Recommended” with a short explanation, expected outcome, and a clear primary action such as “Approve and Create Campaign.”
+**High confidence (>90%):**  
+Show the setup as **Recommended** with a short explanation, expected outcome, and a clear primary action like **Approve and Create Campaign**.
 
-**Medium confidence (70-90%):**
-Show the recommendation as “Suggested” instead of “Recommended.” Add a short explanation of trade-offs and encourage the seller to review CPC, budget, and duration before approval.
+**Medium confidence (70–90%):**  
+Show the setup as **Suggested**. Explain the trade-offs and encourage the seller to review CPC, budget, and duration before approval.
 
-**Low confidence (<70%):**
-Do not present the setup as a strong recommendation. Show a message like “This setup is less certain based on current signals” and ask the seller to review or adjust the campaign manually before launch.
+**Low confidence (<70%):**  
+Do not frame the setup as a strong recommendation. Show a message like **This setup is less certain based on current signals** and ask the seller to review or adjust the campaign manually before launch.
 
-**User control surface:**
-The seller can review the recommended product, edit CPC, budget, and duration, and decide whether to approve or adjust the setup before campaign creation.
+**User control surface:**  
+The seller can review the recommended product, edit CPC, budget, and duration, and decide whether to approve or change the setup before campaign creation.
 
 ## Reliability Contract
 
@@ -39,7 +51,9 @@ The seller can review the recommended product, edit CPC, budget, and duration, a
 | Drift velocity | No major drop across 2 consecutive eval cycles | Compare eval scores over time by scenario type | 5-point drop in 2 cycles |
 
 ## HITL Architecture
-A human does not need to review every recommendation. The default flow stays self-service. Human review or escalation is needed when confidence is low, when product signals are strongly conflicting, or when the recommendation could push the seller toward unusually high spend with weak support. The first escalation layer is seller-side review through editable fields. A second layer can be internal review for repeated low-confidence or high-risk recommendation patterns.
+
+The default flow stays self-service. Human review is not needed for every recommendation. The first review layer is the seller, who can inspect and edit the setup before launch. Additional escalation is needed when confidence is low, when signals are strongly conflicting, or when the recommendation could push the seller toward unusually high spend with weak support. Repeated low-confidence or high-risk patterns should be reviewed internally and added back into the dataset.
 
 ## Red-Team Findings
-One failure mode the partner found is that the AI may recommend an expensive campaign setup too confidently when short-term sales momentum looks strong, even if stock is limited or long-term conversion quality is weak. This matters because the seller may trust the recommendation and overspend on a campaign that is not actually a strong candidate.
+
+One important failure mode is that the model may recommend an expensive setup too confidently when short-term sales momentum looks strong, even if stock is limited or long-term conversion quality is weak. This is risky because the seller may trust the recommendation and overspend on a campaign that is not actually a strong candidate.
