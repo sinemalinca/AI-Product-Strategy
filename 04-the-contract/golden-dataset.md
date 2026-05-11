@@ -27,19 +27,21 @@ We test our AI against a versioned set of campaign recommendation scenarios, inc
 
 ## Confidence UX Design
 
-**Approach:** tiered confidence
+**Approach:** Tiered confidence with visible uncertainty signals and a seller review trigger for low-confidence recommendations.
 
-**High confidence (>90%):**  
-Show the setup as **Recommended** with a short explanation, expected outcome, and a clear primary action like **Approve and Create Campaign**.
+**Confident (>90%):** Show the setup as **Recommended** with a short explanation, expected outcome, and a clear primary action like **Approve and Create Campaign**. Keep the tone direct and confident, but still allow the seller to edit CPC, budget, and duration before launch.
 
-**Medium confidence (70–90%):**  
-Show the setup as **Suggested**. Explain the trade-offs and encourage the seller to review CPC, budget, and duration before approval.
+**Uncertain (50–90%):** Show the setup as **Suggested** instead of **Recommended**. Use softer language, explain the trade-offs, and encourage the seller to review CPC, budget, and duration before approval.
 
-**Low confidence (<70%):**  
-Do not frame the setup as a strong recommendation. Show a message like **This setup is less certain based on current signals** and ask the seller to review or adjust the campaign manually before launch.
+**Not confident (<50%):** Do not present the setup as a strong recommendation. Show a message like **“This setup is less certain based on current signals”** and require the seller to review or adjust the campaign manually before launch.
 
 **User control surface:**  
-The seller can review the recommended product, edit CPC, budget, and duration, and decide whether to approve or change the setup before campaign creation.
+The seller can review the recommended product, edit CPC, budget, and duration, and decide whether to approve or change the setup before campaign creation. Low-confidence recommendations should show the main uncertainty drivers, such as stock risk, weak conversion support, or unstable recent demand. Seller corrections should be captured as feedback for future evaluation and model improvement.
+
+- Users see AI reasoning / drivers
+- Users correct and override outputs
+- Corrections feed back into the model / dataset
+- Users adjust the confidence threshold *(not yet)*
 
 ## Reliability Contract
 
