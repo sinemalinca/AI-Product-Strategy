@@ -1,6 +1,6 @@
-# Hepsiburada Sponsored Product Ads — Self-Service Campaign Setup
+# Sponsored Product Ads — AI One Click Campaign Setup
 
-> We are building an AI-powered one-click campaign setup for marketplace sellers, so they can create sponsored product campaigns faster and with less manual decision-making, using product performance signals such as sales trend, conversion rate, and stock availability.
+> We are building an AI-powered one-click campaign setup for marketplace sellers, so they can create sponsored product campaigns faster and with less manual decision-making, using Hepsiburada’s closed-loop product, campaign, and marketplace performance signals.
 
 ---
 
@@ -13,7 +13,7 @@
 | **The Margin** | M3 | [x] | `03-the-margin/` |
 | **The Contract** | M4 | [x] | `04-the-contract/` |
 | **The Guardrails** | M5 | [x] | `05-the-guardrails/` |
-| **The Pitch** | M6 | [x] | `06-the-pitch/` |
+| **The Pitch** | M6 | [ ] | `06-the-pitch/` |
 
 ---
 
@@ -21,13 +21,13 @@
 
 **What we're building, for whom, why now.**
 
-- **Product:** Hepsiburada Sponsored Product Ads — Self-Service Campaign Setup
+- **Product:** Hepsiburada Sponsored Product Ads — AI-assisted One Click Campaign Setup
 - **AI Value Archetype:** Automator
 - **Vulnerability Scores:** Moat 4/5 · Data 5/5 · Platform 3/5
-- **Top Risk:** The biggest strategic risk is that competitors copy the one-click AI campaign setup experience and use a larger buyer audience or stronger seller trust to capture more marketplace ad budget.
+- **Top Risk:** Marketplace competitors such as Trendyol Ads or Amazon Ads can copy the one-click setup experience and use stronger seller trust or larger buyer reach to capture seller ad budget.
 - **Confidence:** M
 - **Prototype:** https://sponsoredproductadsoneclick.lovable.app
-- **Kill Criteria:** We would stop or pivot this bet if sellers do not trust the AI-generated recommendations, if they still prefer manual campaign setup, or if the recommended campaigns do not show better adoption, activation, or advertising performance compared to the existing self-service flow.
+- **Kill Criteria:** Stop or pivot if sellers do not trust the AI-generated recommendations, continue to prefer manual campaign setup, reject recommendations most of the time, or if One Click does not improve campaign creation, activation, or advertising performance compared to the existing self-service flow.
 
 → Details: [`01-the-bet/`](01-the-bet/)
 
@@ -37,10 +37,11 @@
 
 **Why this won't get copied in 6 months.**
 
-- **Data Flywheel Score:**
+- **Data Flywheel Score:** 12/20
 - **Weakest Loop:** Preference
-- **Top Encroachment Threat:** Amazon Ads
-- **Encroachment Defense:** Start capturing seller-level decision patterns more clearly and use them in future recommendations. For example, the product could learn each seller’s usual budget comfort zone, preferred campaign dur…
+- **Competitive Position:** The product is strongest where Hepsiburada combines marketplace-native sponsored visibility with closed-loop commerce data. External AI tools can copy the surface experience, but they cannot directly access Hepsiburada’s product impressions, clicks, conversion, stock, pricing, campaign outcomes, and seller behavior.
+- **Top Encroachment Threat:** Trendyol Ads and Amazon Ads
+- **Encroachment Defense:** Defend by making One Click stronger not only on simplicity, but on recommendation quality, seller trust, and Hepsiburada’s marketplace-specific performance signals. The long-term defense is learning from seller-level decisions, campaign outcomes, and category-level performance patterns over time.
 - **Vendor Portability:** Partial
 
 → Details: [`02-the-moat/`](02-the-moat/)
@@ -51,14 +52,13 @@
 
 **Will this make money or bleed it?**
 
-- **Gross Margin (current):**
-- **Gross Margin (AI-adjusted):**
-- **Pricing Model:** hybrid
-- **Pricing Today → Tomorrow:** Sponsored Product Ads is already part of the marketplace ads flow. Sellers pay through ad spend, not through a separate AI fee. → One Click can stay bundled as a lightweight recommendation feature, as long as the expensive path stays limited. If usage grows a lot or more advanced automation is added later, a premium automation tier may be needed.
-- **Total AI COGS / unit:**
-- **Cascading Strategy:** frontier: Claude Opus 4.7
-- **Net Margin Shift:** AI adds variable cost, so margin is lower than a fully manual setup flow. But if One Click increases campaign creation and ad spend enough, the overall business impact can still be positive.
-- **Break-even at:**
+- **Gross Margin (current):** 90%
+- **Gross Margin (AI-adjusted):** 88%
+- **Pricing Model:** Hybrid. One Click stays bundled in the Sponsored Product Ads flow for now, while advanced automation could become a premium add-on later.
+- **Total AI COGS:** $33.28/month for 5,000 One Click requests, or about $0.13 per active seller/month under the working assumption.
+- **Cascading Strategy:** 70% small model, 25% mid model, 5% frontier model. Simple flows run on the cheapest path, standard recommendation flows use the mid model, and frontier usage is reserved for edge cases or low-confidence recommendations.
+- **Net Margin Shift:** Margin moves from 90% to 88% because AI adds a new variable cost layer. The bet still works if One Click increases campaign creation and ad spend enough to offset the added AI cost.
+- **Break-even at:** One Click must lift campaign creation and ad spend enough to cover the added AI cost while keeping most traffic on cheaper model paths.
 
 → Details: [`03-the-margin/`](03-the-margin/)
 
@@ -70,9 +70,11 @@
 
 - **Reliability Target:** 85%+ recommendation quality on the v1 golden dataset
 - **Golden Dataset:** 10 rows, 5 adversarial
+- **Judge Mix:** 60% rule / 40% LLM
 - **Confidence UX:** Tiered confidence with visible uncertainty signals and a seller review trigger for low-confidence recommendations.
-- **HITL Architecture:** **Trigger:** Confidence <50% OR recommendation includes strong spend risk, stock risk, or conflicting product signals.
-- **Failure Mode Coverage:** My partner ran a **Confident Hallucination** attack around a product that showed strong short-term sales momentum, but had limited stock and a suggested CPC that would push the seller toward unusually high spend.…
+- **HITL Architecture:** The first reviewer is the seller through manual review and editable fields. Repeated high-risk or low-confidence patterns are reviewed internally by the product or ads team.
+- **Failure Mode Coverage:** Covers mixed signals, stock risk, pricing risk, unstable demand, high spend risk, and confident hallucination where the model may sound confident while making a weak or risky recommendation.
+- **Key Red-Team Finding:** The model may over-trust short-term performance signals and recommend a high-spend setup too confidently when stock and spend risk should reduce confidence.
 
 → Details: [`04-the-contract/`](04-the-contract/)
 
@@ -82,14 +84,12 @@
 
 **What breaks when this scales — and what compounds.**
 
-- **Compounding System:** | Loop | Input | Output | Compounds? | Status | |------|-------|--------|-----------|--------| | Recursive Learning | Seller approvals, edits, overrides, rejected recommendations, and post-campaign performance signals su…
-- **Governance Posture:** This policy covers the AI-assisted One Click campaign setup flow for Sponsored Product Ads. It includes product selection recommendations, suggested CPC, daily budget, campaign duration, confidence messaging, and seller-…
-- **Autonomy Boundaries:** - **Auto:** The AI can analyze product and campaign signals, recommend a product to advertise, suggest CPC, daily budget, and campaign duration, generate a seller-facing explanation, assign a confidence level, and flag risk drivers such as …
-- **Escalation Triggers:** Escalation is required when confidence is below 50%, when the suggested setup includes unusually high spend, when stock risk is material, when product signals conflict, or when the recommendation repeatedly gets edited o…
-- **Audit Cadence:** The product manager owns the governance policy and reviews it monthly with the ads, data, and engineering teams.…
-- **Shadow AI Audit (user-side):** 5 workarounds found · 4 build candidates, 1 partner candidate, 0 ignore build candidates · adjacent spend Approximately $130/month across surveyed or assumed users
-- **Agent Boundaries:** Current agent status: recommendation assistant, not autonomous agent.
-- **Regulatory Exposure:** Risk tier: Limited
+- **Compounding System:** The strongest long-term loop is recursive learning from seller approvals, edits, overrides, rejected recommendations, and post-campaign performance. Today this loop is still broken because those signals do not reliably flow back into the recommendation system yet.
+- **Context Connectivity:** Campaign performance data, product funnel metrics, seller edits, category benchmarks, stock signals, pricing data, and ad spend outcomes should flow into one shared recommendation feedback view across product, ads, data, and seller-facing teams.
+- **Governance Posture:** AI can recommend and explain, but the seller stays in control of any spend-impacting action. Campaign launch, CPC changes, and budget changes require seller approval.
+- **Shadow AI Status:** 5 workarounds found and triaged: 4 build candidates, 1 partner candidate, 0 ignore. Estimated hidden spend is about $130/month across surveyed or assumed users.
+- **Agent Boundaries:** Current system is a recommendation assistant, not an autonomous agent. It can recommend product, CPC, budget, duration, rationale, confidence, and risks. It cannot launch campaigns, change bids or budgets, access unrelated seller data, or train external models on seller-level data.
+- **Regulatory Exposure:** Limited. The product influences advertising setup decisions but does not make hiring, credit, medical, legal, or eligibility decisions. Main risks are financial impact on sellers, misleading confidence, data privacy, and unfair or overly aggressive recommendations.
 
 → Details: [`05-the-guardrails/`](05-the-guardrails/)
 
@@ -99,11 +99,10 @@
 
 **How you get this funded, shipped, and adopted.**
 
-- **Horizon 1 (Now):**
-- **Horizon 2 (Next):**
-- **Horizon 3 (Bet):**
-- **Board Narrative:** **The case:**
-- **Ask:** ## M1 Baseline vs. Now
-- **Key Strategic Change:**
+- **Horizon 1 (Now):** To be completed in Module 6
+- **Horizon 2 (Next):** To be completed in Module 6
+- **Horizon 3 (Bet):** To be completed in Module 6
+- **Board Narrative:** To be completed in Module 6
+- **Key Metric:** To be completed in Module 6
 
 → Details: [`06-the-pitch/`](06-the-pitch/)
