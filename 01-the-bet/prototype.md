@@ -13,7 +13,7 @@ Lovable
 ## Prototype Link
 <!-- Paste the shareable URL -->
 
-https://sponsoredproductadsoneclick.lovable.app 
+https://sponsoredproductadsoneclick.lovable.app
 
 ## AI Value Archetype
 <!-- Automator / Copilot / Oracle / Creator / Orchestrator -->
