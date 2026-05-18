@@ -49,13 +49,42 @@ Approval owner: seller for campaign launch; product/ads team for policy changes 
 Logs: all recommendations, confidence scores, seller edits, approvals, and overrides should be logged for audit and evaluation.
 
 ## Shadow AI Audit
+Shadow AI Audit (user-side) — Module 5
 
-| Tool | Owner | Risk Level | Decision |
-|------|-------|-----------|----------|
-| | | H / M / L | keep / govern / kill |
-| | | H / M / L | keep / govern / kill |
-| | | H / M / L | keep / govern / kill |
+## Discover — User-Side Workarounds
+- Sellers export product performance data and ask ChatGPT which products they should advertise. | source: Support ticket | signal: Capability gap | freq: M | spend: $20/mo | decision: Build
+- Sellers use ChatGPT or spreadsheet AI to estimate CPC and daily budget before creating a campaign. | source: User interview | signal: Workflow gap | freq: H | spend: $20/mo | decision: Build
+- Seller-facing teams use personal AI tools to draft campaign recommendations for sellers. | source: Other | signal: Workflow gap | freq: M | spend: $20/mo | decision: Build
+- Sellers use external AI ad tools to compare marketplace ad performance and decide where to allocate spend. | source: User interview | signal: Capability gap | freq: L | spend: $50/mo | decision: Partner
+- Sellers paste campaign results into ChatGPT to understand why performance was weak and what to change next. | source: Support ticket | signal: Trust gap | freq: M | spend: $20/mo | decision: Build
 
-**Total tools found:**
-**Tools after triage:**
-**Estimated hidden spend:**
+## Pattern Assessment
+- Workarounds found: 5
+- Build candidates: 4
+- Partner candidates: 1
+- Ignore decisions: 0
+- Adjacent spend: $130/mo
+- Dominant signal: Capability gap
+
+## Action Plan
+### Build
+Product selection recommendation from exported or platform-native product performance data.
+CPC and daily budget recommendation inside the campaign setup flow.
+AI-generated campaign performance explanation after launch.
+Internal seller-facing recommendation support should move into the official One Click workflow instead of personal AI tools.
+
+### Partner
+Explore partnership or integration opportunities for broader cross-marketplace ad planning tools, but keep Hepsiburada-specific Sponsored Product recommendations native because they depend on closed-loop marketplace data.
+
+### Ignore + Monitor
+Ignore generic AI usage for rewriting seller-facing text unless it directly affects campaign setup, spend decisions, or seller trust. Monitor external AI ad planning tools to understand whether they start replacing marketplace-native campaign workflows.
+
+## Roadmap Brief
+Based on your audit: 5 user-side workarounds discovered.
+Decisions: 4 build · 1 partner · 0 ignore · 0 TBD.
+Estimated adjacent spend: $130/mo across surveyed users.
+Dominant signal: Capability gap.
+
+Recommended next step: Capability gaps dominate — users want something your product does not do. Strongest near-term move is building one or two of these natively before a competitor does.
+
+Sequence the Build column by frequency × strategic relevance. Confirm Partner candidates with the external tools' partnership teams. Re-run this audit each quarter — workarounds shift fast.
